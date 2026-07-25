@@ -146,13 +146,12 @@
             span.text('Features');
             let inner = $('<div></div>').addClass('picFeatureGrid').appendTo(el);
             for (let i = 0; i < data.circuits.length; i++) {
-                // Create a new feature for each of the circuits.  We will hide them if they
-                // are not to be shown in the features menu.
-                let div = $('<div class="picFeature picCircuit btn"></div>');
                 let circuit = data.circuits[i];
+                if (circuit.showInFeatures === false) continue;
+                let div = $('<div class="picFeature picCircuit btn"></div>');
                 div.appendTo(inner);
                 div.circuit(circuit);
-                if (typeof circuit.showInFeatures !== 'undefined') div.attr('data-showinfeatures', circuit.showInFeatures);
+                if (typeof circuit.showInFeatures !== 'undefined') div.attr('data-showinfeatures', String(circuit.showInFeatures));
             }
             for (let i = 0; i < data.features.length; i++) {
                 let div = $('<div class="picFeature picCircuit btn"></div>');
@@ -172,6 +171,13 @@
             var div = el.find('div.picFeature[data-eqid=' + data.id + ']');
             if (data.isActive === false) {
                 div.remove();
+                return;
+            }
+            if (data.showInFeatures === false) {
+                if (div.length > 0) {
+                    try { div[0].stopCountdownEndTime(); } catch (err) { console.log(err); }
+                    div.remove();
+                }
                 return;
             }
             if (div.length === 0) {
@@ -236,7 +242,7 @@
             lbl.appendTo(el);
             lbl.text(o.name);
             $('<span class="picCircuitEndTime"></span>').appendTo(el);
-            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', o.showInFeatures);
+            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(o.showInFeatures));
             self.setState(o);
             const delta = 6;
             let startX;
@@ -314,7 +320,7 @@
                 }
                 self.countdownEndTime();
                 if (typeof data.name !== 'undefined') el.find('label.picFeatureLabel:first').text(data.name);
-                if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', data.showInFeatures);
+                if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(data.showInFeatures));
                 if (typeof data.action !== 'undefined')   { 
                     if (data.action.val !== 0) {
                         el.find('i.picDropdownButton').addClass('fa-spin');
@@ -379,7 +385,7 @@
             lbl.appendTo(el);
             lbl.text(o.name);
             $('<span class="picCircuitEndTime"></span>').appendTo(el);
-            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', o.showInFeatures);
+            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(o.showInFeatures));
             self.setState(o);
             const delta = 6;
             let startX;
@@ -453,7 +459,7 @@
             }
             self.countdownEndTime();
             if (typeof data.name !== 'undefined') el.find('label.picFeatureLabel:first').text(data.name);
-            if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', data.showInFeatures);
+            if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(data.showInFeatures));
         },
         resetState: function () {
             var self = this, o = self.options, el = self.element;
@@ -792,7 +798,7 @@
                     }
                 });
                 if (typeof data.name !== 'undefined') el.find('label.picFeatureLabel').text(data.name);
-                if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', data.showInFeatures);
+                if (typeof data.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(data.showInFeatures));
                 if (self.isLight(data)) {
                     el.addClass('picLight');
                     // Alright we are a light.  Make sure we have an entry in the lights panel.
@@ -920,7 +926,7 @@
                                 let div = $('<div class="picLight picFeature picCircuit btn"></div>');
                                 //console.log({ msg: 'Building light', light: data.circuits[i] });
                                 div.appendTo(inner);
-                                if (typeof data.circuits[i].showInFeatures !== 'undefined') div.attr('data-showinfeatures', data.circuits[i].showInFeatures);
+                                if (typeof data.circuits[i].showInFeatures !== 'undefined') div.attr('data-showinfeatures', String(data.circuits[i].showInFeatures));
                                 div.circuit(data.circuits[i]);
                                 self.setItem(data.circuits[i].type.name, data.circuits[i]);
                                 break;
@@ -1056,7 +1062,7 @@
 
             var theme = $('<div class="picIBColor" data-color="none"></div>');
             theme.appendTo(el);
-            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', o.showInFeatures);
+            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(o.showInFeatures));
             self.setState(o);
             const delta = 6;
             let startX;

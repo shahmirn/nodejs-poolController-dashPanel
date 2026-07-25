@@ -27,7 +27,7 @@
 
         var theme = $('<div class="picIBColor" data-color="none"></div>');
         theme.appendTo(el);
-        if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', o.showInFeatures);
+        if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(o.showInFeatures));
         self.setState(o);
         el
             .on('mousedown', function (evt) {

@@ -499,7 +499,7 @@
             var lbl = $('<label class="picFeatureLabel"></div>');
             lbl.appendTo(el);
             lbl.text(o.name);
-            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', o.showInFeatures);
+            if (typeof o.showInFeatures !== 'undefined') el.attr('data-showinfeatures', String(o.showInFeatures));
         }
     });
     $.widget('pic.bodyHeatOptions', {
