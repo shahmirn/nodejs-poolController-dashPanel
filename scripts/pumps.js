@@ -123,10 +123,11 @@
                     else {
                         // Determine pump on/off status based on pump type
                         var isOn = false;
-                        if (type.name === 'regalmodbus') {
-                            // For modbus pumps, use actual speed/flow indicators
-                            // Pump is considered "on" if it's actually running at a speed > 0
-                            isOn = (typeof data.rpm !== 'undefined' && data.rpm > 0) || 
+                        var vsTypes = ['vs', 'vsf', 'vf', 'hwvs', 'vs+svrs', 'regalmodbus', 'neptunemodbus'];
+                        if (vsTypes.indexOf(type.name) !== -1) {
+                            // For variable-speed pumps use actual telemetry; IntelliCenter WS does not set command=10 or relay>0
+                            isOn = (typeof data.rpm !== 'undefined' && data.rpm > 0) ||
+                                   (typeof data.watts !== 'undefined' && data.watts > 0) ||
                                    (typeof data.speed !== 'undefined' && data.speed > 0);
                         }
                         else {

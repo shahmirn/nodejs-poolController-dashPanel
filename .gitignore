@@ -284,3 +284,6 @@ ssl/
 scripts/.DS_Store
 
 .plan/
+docs/ISSUES_COMPLETED.md
+docs/ISSUES_INDEX.md
+docs/ISSUES.md
