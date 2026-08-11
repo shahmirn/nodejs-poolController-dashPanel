@@ -1,5 +1,18 @@
 # Changelog
 
+## [10.0.1] - 2026-08-10
+
+### Features
+- **Dynamic controller type switching**: Model dropdown allows switching controller types at runtime; longer passwords supported for ScreenLogic ([#1220](https://github.com/tagyoureit/nodejs-poolController/discussions/1220))
+- **Custom password input**: Widget system supports `inputAttrs` configuration for password-type inputs (ScreenLogic)
+- **Feed body temp option**: Added `feedBodyTemp` checkbox to heater configuration for active body temperature feed
+
+### Bug Fixes
+- **Schedule isOn state**: Compute schedule active state from time window for IntelliCenter (previously relied solely on reported state)
+- **Variable-speed pump detection**: Extended VS pump "on" detection to all variable-speed pump types, specifically for WebSocket implementation
+- **Hidden features filtering**: Skip hidden features and cast `showInFeatures` to string to avoid rendering phantom circuits ([#1223](https://github.com/tagyoureit/nodejs-poolController/discussions/1223))
+- **Trust proxy**: Enable Express trust proxy and forward protocol/ip/port headers for correct operation behind reverse proxies ([#1210](https://github.com/tagyoureit/nodejs-poolController/issues/1210))
+
 ## [10.0.0] - 2026-06-28
 
 ### Breaking Changes
