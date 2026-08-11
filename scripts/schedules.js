@@ -116,7 +116,23 @@
                 }
                 el.attr('data-active', true);
                 dataBinder.bind(el, data);
-                el.find('div.picIndicator').attr('data-status', data.manualPriorityActive ? 'delay' : data.isOn ? 'on' : 'off');
+                var isOn = makeBool(data.isOn);
+                if (!isOn) {
+                    // IntelliCenter WS never sets isOn on schedules (syncScheduleStates only runs on RS-485 path).
+                    // Fallback: compute from browser clock vs startTime/endTime (minutes from midnight).
+                    // scheduleDays bitmask: Sunday=bit0, Monday=bit1, ..., Saturday=bit6 — matches JS getDay().
+                    var nowMins = (new Date()).getHours() * 60 + (new Date()).getMinutes();
+                    var startMins = parseInt(data.startTime);
+                    var endMins = parseInt(data.endTime);
+                    if (!isNaN(startMins) && startMins >= 0 && !isNaN(endMins) && endMins >= 0) {
+                        var dayMask = typeof data.scheduleDays === 'object' ? (data.scheduleDays.val || 127) : (parseInt(data.scheduleDays, 10) || 127);
+                        var dayMatch = (dayMask & (1 << (new Date()).getDay())) !== 0;
+                        if (dayMatch) {
+                            isOn = endMins <= startMins ? (nowMins >= startMins || nowMins <= endMins) : (nowMins >= startMins && nowMins <= endMins);
+                        }
+                    }
+                }
+                el.find('div.picIndicator').attr('data-status', data.manualPriorityActive ? 'delay' : isOn ? 'on' : 'off');
                 el.attr('data-id', data.id);
                 el.find('.picSchedDays').remove();
                 var startTime = parseInt(data.startTime);

@@ -128,6 +128,7 @@
                             // For variable-speed pumps use actual telemetry; IntelliCenter WS does not set command=10 or relay>0
                             isOn = (typeof data.rpm !== 'undefined' && data.rpm > 0) ||
                                    (typeof data.watts !== 'undefined' && data.watts > 0) ||
+                                   (typeof data.flow !== 'undefined' && data.flow > 0) ||
                                    (typeof data.speed !== 'undefined' && data.speed > 0);
                         }
                         else {
