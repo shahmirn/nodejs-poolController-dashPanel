@@ -6,19 +6,24 @@ const DEFAULT_PORT = 5150;
 const HEALTH_PATH = "/config/appVersion?health";
 
 let port = DEFAULT_PORT;
+let hasValidEnvPort = false;
 
 const envPort = process.env.POOL_WEB_SERVERS_HTTP_PORT;
-if (envPort) {
-    const parsed = parseInt(envPort, 10);
-    if (!isNaN(parsed)) port = parsed;
+if (typeof envPort !== "undefined") {
+    const parsed = Number(envPort.trim());
+    if (Number.isInteger(parsed) && parsed > 0 && parsed <= 65535) {
+        port = parsed;
+        hasValidEnvPort = true;
+    }
 }
 
-try {
-    const config = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"));
-
-    port = config.web?.servers?.http?.port ?? port;
-} catch {
-    // Use the default or environment-specified port if the config is unavailable or invalid.
+if (!hasValidEnvPort) {
+    try {
+        const config = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"));
+        port = config.web?.servers?.http?.port ?? DEFAULT_PORT;
+    } catch {
+        // Use the default port if the config is unavailable or invalid.
+    }
 }
 
 const request = http.get(
