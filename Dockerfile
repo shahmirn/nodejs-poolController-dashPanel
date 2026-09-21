@@ -39,6 +39,7 @@ COPY --chown=node:node --from=build /app/themes ./themes
 COPY --chown=node:node --from=build /app/pages ./pages
 COPY --chown=node:node --from=build /app/scripts ./scripts
 COPY --chown=node:node --from=build /app/server/messages/docs ./server/messages/docs
+COPY --chown=node:node docker/healthcheck.js /usr/local/bin/healthcheck.js
 
 USER node
 
@@ -46,7 +47,6 @@ USER node
 EXPOSE 5150 5151
 
 # Healthcheck: perform lightweight HTTP request to ensure app responding
-COPY docker/healthcheck.js /usr/local/bin/healthcheck.js
 HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=5 \
     CMD node /usr/local/bin/healthcheck.js
 
