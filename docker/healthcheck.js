@@ -7,12 +7,18 @@ const HEALTH_PATH = "/config/appVersion?health";
 
 let port = DEFAULT_PORT;
 
+const envPort = process.env.POOL_WEB_SERVERS_HTTP_PORT;
+if (envPort) {
+    const parsed = parseInt(envPort, 10);
+    if (!isNaN(parsed)) port = parsed;
+}
+
 try {
     const config = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"));
 
-    port = config.web?.servers?.http?.port ?? DEFAULT_PORT;
+    port = config.web?.servers?.http?.port ?? port;
 } catch {
-    // Use the default port if the config is unavailable or invalid.
+    // Use the default or environment-specified port if the config is unavailable or invalid.
 }
 
 const request = http.get(
